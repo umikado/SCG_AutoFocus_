@@ -1,10 +1,25 @@
-# AGENTS.md — SCG LyricClips（给 Codex 的工作规则）
-- 权威规格是 `DEV_SPEC.md`。按 §15 的 ticket 顺序做，**一张 ticket 一个 PR**，PR 标题以 ticket ID 开头（例如 `T2-3: NWLyricAligner`）。
-- 先写测试再写实现。PR 描述必须写明：对应的 ticket、验收标准的逐条勾选、没做的部分、需要 Umi 在 Mac 或真机上验证的步骤。
-- 你的环境大概率是 Linux：纯 Swift 的 target（`LCCore` `LCText` `LCAlign` `LCTiming` `LCTemplates` `LCSubtitles` `LCModelStore`）必须只依赖 Foundation 和 swift-crypto，`swift test` 必须能通过。Apple 专属代码用 `#if canImport(CoreML)` 或 `#if canImport(AVFoundation)` 隔离，并且不要声称在 Linux 上验证过它们。
-- 禁止：FFmpeg、x264 和任何 GPL/AGPL 依赖；analytics、广告、崩溃上报 SDK；上传用户音频或歌词的任何代码；在 Release 配置下链接 HTDemucs（它的权重只限研究用途，见 DEV_SPEC §9）。
-- 新增任何依赖或模型，都要同时更新 `docs/THIRD_PARTY_NOTICES.md` 和 `docs/MODEL_PROVENANCE.md`。许可证不明的，标 `provenance: "unverified"`，并在 PR 里提出来。
-- 测试数据只用 `Tests/Fixtures` 里的合成数据或 SCG Audio 自有曲目，不能提交任何第三方版权歌曲或歌词。
-- 时间统一用秒（Double），以原曲 0 点为基准；导出时才换成相对片段起点的时间。
-- 代码风格：Swift 6 strict concurrency，公开 API 写 `///` 文档注释，用 SwiftFormat 和 SwiftLint 的默认配置；不要做和 ticket 无关的重构。
-- 不要合并 PR，不要改 `main` 分支保护设置，不要创建 release 或 tag。规格有歧义时，在 PR 里提问，不要自行扩展需求。
+# AGENTS.md — SCG LyricClips（给 AI 协同开发的工作规则 v0.2）
+
+- **权威规格与范围**：权威规格是 [DEV_SPEC.md](DEV_SPEC.md)（v0.2）。按 §15 的阶段与 ticket 依赖顺序推进，保留 Phase 0 Gate（纯 Swift 核心模块可先行在云端开发，不阻塞于真机 Gate）。不要把规格中的建议当成对外发信、正式发布或修改仓库保护规则的授权。
+- **交付与 PR 规范**：每张 ticket 对应一个独立分支或 PR，标题以 ticket ID 开头（例如 `T2-3: NWLyricAligner`）。**对核心算法、编解码、状态机先写失败测试再写实现**。PR/提交描述必须写明：对应的 ticket、验收标准的逐条勾选、实际运行的测试命令与结果、未验证部分、需要 Umi 在 Mac Studio 或真机上验证的步骤。
+- **云端 Linux 与 Mac Studio 双环境隔离（R11）**：
+  - 纯 Swift 的 7 个 target（`LCCore`、`LCText`、`LCAlign`、`LCTiming`、`LCTemplates`、`LCSubtitles`、`LCModelStore`）只允许依赖 `Foundation`（Linux 下允许 `FoundationNetworking`）和 `swift-crypto`，在 Linux 上必须能直接通过 `swift test`。
+  - `Package.swift` 必须使用 `#if !os(Linux)` 从 Linux 依赖图中彻底排除 Apple 专属 targets 和 `binaryTarget`（如 `whisper.cpp` xcframework），不能仅靠源码里的 `#if canImport(...)`。
+  - Apple 专属代码必须在 Mac Studio + Xcode 上实际构建通过后才能标记为已验证，严禁在 Linux 环境声称已验证 iOS/Core ML/AVFoundation 代码。
+- **红线禁令**：
+  - 禁止引入 FFmpeg、x264 和任何 GPL/AGPL 依赖。
+  - 禁止引入任何 analytics、广告、崩溃上报 SDK，或任何上传用户音频、歌词、曲名、文件名的代码。
+  - **禁止在主工程、远程 manifest 或仓库中集成或下载 HTDemucs 权重**（`DEBUG` 编译配置不是许可证豁免依据；HTDemucs 仅限 Umi 在本地独立环境做 Phase 0 科研对比参考）。
+- **许可证与模型门禁（R09、R10）**：
+  - 新增任何依赖或模型，必须同时更新 `docs/THIRD_PARTY_NOTICES.md` 和 `docs/MODEL_PROVENANCE.md`（记录来源 URL、版本/commit、源文件与转换产物 SHA-256、转换工具版本与许可依据）。
+  - 生产代码通过内置的 `ApprovedModelAllowlist` 校验所有模型及 companion 的 ID 与 SHA-256，未经审核确认的模型不得放入 `ApprovedModelAllowlist` 或标为 `verified`。
+- **测试数据与版权安全**：
+  - 仓库内提交的测试数据只允许用 `Tests/Fixtures` 里的原创合成数据，严禁提交任何第三方版权歌曲或歌词。
+  - SCG Audio 自有版权的真实音频母带仅保存在本地设备用于 benchmark 跑分，未获明确公开授权前不要把完整母带音频提交到公开 Git 仓库。
+- **核心契约守则（R01、R03、R05–R08）**：
+  - **时间**：统一用原曲绝对秒（有限非负 `Double`，校验 `isFinite`），采用半开区间 `[start, end)`。导出字幕时严格执行“先与 `[segment.start, segment.end)` 求交集 → 再减去 `segment.start` 平移 → 最后按格式量化”。
+  - **文本偏移**：所有文本区间（`ReadingUnit.sourceRange`、`WordTiming.range`）统一使用原行 `String.utf16` 的半开区间 `Range<Int>`，任何拆分或编辑必须校验合法 `Character` 边界。
+  - **Whisper DTW**：启用 `dtw_token_timestamps = true` 时，必须显式设置 `flash_attn = false`；先拼合 UTF-8 多字节 token 再映射时间戳，且只加一次 `segment.decodedStart`。
+  - **分离拼接**：Spleeter 采用“外置 `vDSP` STFT/iSTFT + Core ML Mask 推理”，块级 Overlap-Add 必须按有效窗权重和归一化。
+  - **并发与缓存**：`PipelineCoordinator` actor 必须显式防止重入并发执行，且底层推理未安全退出前禁止 `unload()` 模型；使用包含完整输入参数（含语言、prompt、模型 hash、运行时版本）的确定性文件缓存。
+- **代码风格与纪律**：Swift 6 strict concurrency，公开 API 写 `///` 文档注释；只做当前 ticket 相关修改，不做无关重构；不要自动合并 PR，不要创建 release 或 tag。
