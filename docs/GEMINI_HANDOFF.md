@@ -4,6 +4,8 @@
 仓库：[`umikado/SCG_AutoFocus_`](https://github.com/umikado/SCG_AutoFocus_)  
 报告对象：v0.2 规格复核，以及 T1-1／T1-2 的首次实现。
 
+> 更新说明：§1–7 保留首次交付快照；本轮 Gemini 修正及 T1-3/T1-4 最新状态见 §8–10。当前全套为 39 项 Linux XCTest 通过。
+
 ## 1. 结论与当前仓库状态
 
 Codex 已执行 `git pull origin main`，完整阅读 `6462313` 下的 README、DEV_SPEC v0.2 和 AGENTS v0.2。接受 Gemini 的轻量化裁剪，已开始不依赖真机 Gate 的纯 Swift 核心开发。没有把 v0.2 全文视为无条件通过；剩余问题按受影响 ticket 记录，未阻塞独立的 LCCore 工作。
@@ -133,3 +135,13 @@ Mac 上可先运行第二条命令，但不能据此替代 `xcodebuild test` 或
 基于修正后的 T1-2，新建 `t1-3-project-store`。已实现 Application Support 工程存储、串行 CRUD、流式音频拷贝/哈希、词法与实际路径 containment、逐级符号链接拦截、原子 JSON 发布。中断注入和残留部分临时文件测试证明旧 JSON 不被替换为半成品。
 
 共 23 项 XCTest 通过；新增的 swift-crypto 3.3.0 已锁定版本/commit 并保留 Apache/BoringSSL 许可。Apple 平台排除备份标记尚需 Mac 实测。严格边界：每个根目录由一个 store 独占；不声称防住恶意并发文件替换或断电损坏。真实音频元数据仍由 LCAudio 提供。详见 tickets/T1-3.md。
+
+## 10. T1-4 LCSubtitles 交付（2026-11-17）
+
+分支 `t1-4-subtitles` 基于 `t1-3-project-store`。已实现 SRT/LRC 严格编解码、缺失 end 回退、先裁剪再平移、有界量化、多时间标签、offset 归一化、清屏标记及小时/分钟进位。新增 16 项字幕测试，当前总计 39 项 XCTest 通过；纯 Linux 依赖图仅允许固定 swift-crypto，无 Apple binaryTarget。
+
+TDD 证据：字幕 API 实现前编译失败；自查发现 LRC 极短残片影响清屏及文字时间标签歧义后，又先加入两项测试、观察到 5 项断言失败，再修正并重跑全套。测试含原创 golden LRC/SRT、CRLF/BOM、多行 SRT、相同时间稳定排序、溢出拒绝及片段末端量化扫点。
+
+明确约定：片段毫秒上限取 floor，防止超出真实 clip；LRC 正 offset 表示延迟，负结果钳至 0；编码后不再输出 offset。标准 codec 可输出三位毫秒 LRC，但 App 导出固定两位百分秒。被丢弃的不可表达残片不再影响其他可见行清屏；导出相同百分秒起点保留最后一行，而解析器保留重复事件。LRC 无转义机制，文字以合法时间标签开头时明确报错；普通 [Chorus] 文本可往返。
+
+PR 顺序：[#2](https://github.com/umikado/SCG_AutoFocus_/pull/2)（b242eda，模型修正）→ [#3](https://github.com/umikado/SCG_AutoFocus_/pull/3)（7d27d54，ProjectStore）→ [#4](https://github.com/umikado/SCG_AutoFocus_/pull/4)（9a84818，LCSubtitles）。都未自动合并；真实播放器兼容性、Mac 备份标记及 Xcode/iPhone 验收仍待各对应阶段。详细 AC 与命令见 [T1-4 验收记录](tickets/T1-4.md)。

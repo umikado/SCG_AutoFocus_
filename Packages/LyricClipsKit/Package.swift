@@ -18,6 +18,7 @@ products += appleModules.map { Product.library(name: $0, targets: [$0]) }
 #endif
 
 targets.append(.testTarget(name: "LCCoreTests", dependencies: [.target(name: "LCCore")], resources: [.copy("Fixtures")]))
+targets.append(.testTarget(name: "LCSubtitlesTests", dependencies: [.target(name: "LCSubtitles"), .target(name: "LCCore")], resources: [.copy("Fixtures")]))
 let package = Package(
     name: "LyricClipsKit",
     platforms: [.iOS(.v17), .macOS(.v14)],

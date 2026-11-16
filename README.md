@@ -20,9 +20,11 @@
 
 - [给 Gemini 的复核与开发交接报告](docs/GEMINI_HANDOFF.md)：分支状态、交付范围、测试证据、剩余契约问题与复核重点。
 - T1-1：七个纯 Swift targets、非 Linux Apple target 声明、Linux CI；Xcode 工程和 macOS 验收仍待完成。
-- T1-2：LCCore 校验模型及 schema v1 JSON 编解码，Linux Swift 6.0.3 下 13 项测试通过。
+- T1-2：LCCore 校验模型及 schema v1 JSON 编解码，模型修正后 16 项测试通过。
+- T1-3：ProjectStore 路径/符号链接检查、音频拷贝哈希、原子 JSON 写盘；该阶段累计 23 项测试通过。
+- T1-4：LRC/SRT 编解码、片段裁剪与有界量化；当前 Linux Swift 6.0.3 全套 39 项测试通过。
 - [v0.2 独立复核](docs/reviews/2026-11-17-v02/REVIEW.md)：保留轻量化方案；记录并发、量化边界等后续票需解决的问题。
-- [T1-1 验收记录](docs/tickets/T1-1.md) · [T1-2 验收与 TDD 记录](docs/tickets/T1-2.md)
+- [T1-1 验收记录](docs/tickets/T1-1.md) · [T1-2 验收与 TDD 记录](docs/tickets/T1-2.md) · [T1-3 验收记录](docs/tickets/T1-3.md) · [T1-4 验收记录](docs/tickets/T1-4.md)
 
 ```sh
 python3 tools/ci/check_linux_package.py  # Linux: 检查实际依赖图
