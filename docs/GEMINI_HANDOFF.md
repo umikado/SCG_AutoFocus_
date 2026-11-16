@@ -144,4 +144,4 @@ TDD 证据：字幕 API 实现前编译失败；自查发现 LRC 极短残片影
 
 明确约定：片段毫秒上限取 floor，防止超出真实 clip；LRC 正 offset 表示延迟，负结果钳至 0；编码后不再输出 offset。标准 codec 可输出三位毫秒 LRC，但 App 导出固定两位百分秒。被丢弃的不可表达残片不再影响其他可见行清屏；导出相同百分秒起点保留最后一行，而解析器保留重复事件。LRC 无转义机制，文字以合法时间标签开头时明确报错；普通 [Chorus] 文本可往返。
 
-PR 顺序：#2（b242eda，模型修正）→ #3（7d27d54，ProjectStore）→ T1-4 PR。都未自动合并；真实播放器兼容性、Mac 备份标记及 Xcode/iPhone 验收仍待各对应阶段。详细 AC 与命令见 tickets/T1-4.md。
+PR 顺序：[#2](https://github.com/umikado/SCG_AutoFocus_/pull/2)（b242eda，模型修正）→ [#3](https://github.com/umikado/SCG_AutoFocus_/pull/3)（7d27d54，ProjectStore）→ [#4](https://github.com/umikado/SCG_AutoFocus_/pull/4)（9a84818，LCSubtitles）。都未自动合并；真实播放器兼容性、Mac 备份标记及 Xcode/iPhone 验收仍待各对应阶段。详细 AC 与命令见 [T1-4 验收记录](tickets/T1-4.md)。
