@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 package = Path(__file__).resolve().parents[2] / "Packages/LyricClipsKit"
 graph = json.loads(subprocess.check_output(["swift", "package", "dump-package"], cwd=package))
-expected = {"LCCore", "LCText", "LCAlign", "LCTiming", "LCTemplates", "LCSubtitles", "LCModelStore", "LCCoreTests"}
+expected = {"LCCore", "LCText", "LCAlign", "LCTiming", "LCTemplates", "LCSubtitles", "LCModelStore", "LCCoreTests", "LCSubtitlesTests"}
 assert {t["name"] for t in graph["targets"]} == expected
 assert all(t["type"] != "binary" for t in graph["targets"])
 dependencies = [item["sourceControl"][0] for item in graph["dependencies"]]

@@ -498,7 +498,7 @@ sequenceDiagram
    - 若 $e_{\text{clip}} \le s_{\text{clip}}$（完全落在片段外），直接丢弃该行。
    - 若用户选择“相对片段起点”（默认）：平移为 $s_{\text{rel}} = s_{\text{clip}} - \text{segment.range.start}$，$e_{\text{rel}} = e_{\text{clip}} - \text{segment.range.start}$（保证 $0 \le s_{\text{rel}} < e_{\text{rel}} \le \text{segmentDuration}$）。
    - **量化进位与防零长**：
-     - **SRT**：量化到毫秒（`round(t * 1000)`），正确处理 `59.9996 s -> 00:01:00,000` 进位及 `>= 3600 s` 小时位；若量化后 `endMs <= startMs`，强制令 `endMs = startMs + 1`。输出 UTF-8 LF，序号从 1 连续递增。
+     - **SRT**：量化到毫秒（`round(t * 1000)`），正确处理 `59.9996 s -> 00:01:00,000` 进位及 `>= 3600 s` 小时位；`clipDurationMs = floor(segmentDuration * 1000)`；若 `startMs >= clipDurationMs` 则丢弃。先将 endMs 限制到 `min(clipDurationMs, nextCueStartMs ?? clipDurationMs)`；若 `endMs == startMs`，仅在 `startMs + 1` 不超过上述上限时扩为 1 ms，否则丢弃不可表达的残片。禁止量化后越界或重叠下一行。输出 UTF-8 LF，序号从 1 连续递增。
      - **LRC**：量化到百分之一秒（`round(t * 100)`，正确处理 `59.996 s -> [01:00.00]` 进位）。为表达句尾空白（当本行 $e_{\text{rel}} < \text{nextLineStart}_{\text{rel}} - 0.10$ 或为最后一行且 $e_{\text{rel}} < \text{segmentDuration}$ 时），在该行结束时刻额外输出一行空文本时间标签 `[mm:ss.xx]` 作为清屏标记。解析器支持标准 `[mm:ss.xx]`、`[mm:ss.xxx]`、同行多时间标签展开及 `[offset:±ms]`，往返测试验证规范化后的时间与文本等价（不要求通过有损 LRC 恢复 `UUID` 或 `confidence`）。
 
 ## 13. 隐私、条款、App Store（R14）
