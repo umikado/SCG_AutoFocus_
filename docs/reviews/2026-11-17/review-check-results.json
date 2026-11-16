@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "checks": 6,
+  "scope": "Synthetic arithmetic and contract counterexamples only; no application or device tests.",
+  "results": [
+    {
+      "check": "hann_25_percent_overlap_without_normalization",
+      "min_window_sum": 0.29289321881345254,
+      "max_window_sum": 1.0,
+      "ripple_db": 10.665813663397072
+    },
+    {
+      "check": "normalized_identity_interior",
+      "max_error": 0.0,
+      "limitation": "Interior only; finite-stream edge policy still requires implementation tests."
+    },
+    {
+      "check": "zero_cost_repeated_chorus",
+      "exact_candidates": [
+        0,
+        2
+      ],
+      "literal_five_percent_of_best_detects_tie": false
+    },
+    {
+      "check": "spec_asr_cache_omits_language_and_prompt",
+      "same_key": true
+    },
+    {
+      "check": "clip_intersection_before_offset",
+      "cases": 2
+    },
+    {
+      "check": "dtw_10ms_units_and_decoded_origin",
+      "absolute_seconds": 30.5,
+      "wrong_segment_origin_seconds": 31.5
+    }
+  ]
+}
