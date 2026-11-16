@@ -1,0 +1,40 @@
+Building for debugging...
+[0/20] Copying Fixtures
+[1/20] Write sources
+[9/20] Write swift-version-34569C9CE204F859.txt
+[11/22] Emitting module LCCore
+[12/22] Compiling LCCore Module.swift
+[14/27] Emitting module LCTiming
+[15/27] Compiling LCTiming Module.swift
+[16/28] Emitting module LCText
+[17/28] Compiling LCText Module.swift
+[20/33] Compiling LCSubtitles Module.swift
+[21/33] Emitting module LCSubtitles
+[22/33] Emitting module LCTemplates
+[23/33] Compiling LCTemplates Module.swift
+[26/40] Compiling LCModelStore Module.swift
+[27/40] Emitting module LCModelStore
+[29/43] Emitting module LCAlign
+[30/43] Compiling LCAlign Module.swift
+[31/44] Wrapping AST for LCCore for debugging
+[33/44] Emitting module LCCoreTests
+[34/44] Compiling LCCoreTests ModelTests.swift
+/workspace/SCG_AutoFocus_/Packages/LyricClipsKit/Tests/LCCoreTests/ModelTests.swift:8:38: error: cannot find 'TimeRange' in scope
+  6 |     func testRejectsInvalidTimeRanges() throws {
+  7 |         for value in [Double.nan, .infinity, -.infinity, -1] {
+  8 |             XCTAssertThrowsError(try TimeRange(start: value, end: 20))
+    |                                      `- error: cannot find 'TimeRange' in scope
+  9 |             XCTAssertThrowsError(try TimeRange(start: 0, end: value))
+ 10 |         }
+
+/workspace/SCG_AutoFocus_/Packages/LyricClipsKit/Tests/LCCoreTests/ModelTests.swift:9:38: error: cannot find 'TimeRange' in scope
+  7 |         for value in [Double.nan, .infinity, -.infinity, -1] {
+  8 |             XCTAssertThrowsError(try TimeRange(start: value, end: 20))
+  9 |             XCTAssertThrowsError(try TimeRange(start: 0, end: value))
+    |                                      `- error: cannot find 'TimeRange' in scope
+ 10 |         }
+ 11 |         XCTAssertThrowsError(try TimeRange(start: 2, end: 2))
+
+/workspace/SCG_AutoFocus_/Packages/LyricClipsKit/Tests/LCCoreTests/ModelTests.swift:11:34: error: cannot find 'TimeRange' in scope
+  9 |             XCTAssertThrowsError(try TimeRange(start: 0, end: value))
+ 10 |         }
