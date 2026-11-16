@@ -127,3 +127,9 @@ Mac 上可先运行第二条命令，但不能据此替代 `xcodebuild test` 或
 已在 T1-2 分支补齐 words 范围/时间顺序、独立的行 start/end 约束、段落单调与 AudioSource ≥15 秒约束，以及 manual/confidence 的解码回归测试。新增测试先产生 8 项断言失败，修正后总计 16 项 XCTest 通过。UTF-16 边界遍历已去掉 String(character)，但 Set 仍会分配内存。
 
 后续契约认可并保留：SRT 在片段/下一 cue 边界内才允许扩为 1 ms；run 请求在 await 前认领序号、恢复后淘汰过期者；相同 DTW 时刻按词长分摊。补充：若 DTW 分摊窗口到 decodedEnd 已无正长度，必须返回无效/缺失证据，不能制造零长度 ASRWord。T2-6/T2-7 尚未实现。
+
+## 9. T1-3 ProjectStore 交付（2026-11-17）
+
+基于修正后的 T1-2，新建 `t1-3-project-store`。已实现 Application Support 工程存储、串行 CRUD、流式音频拷贝/哈希、词法与实际路径 containment、逐级符号链接拦截、原子 JSON 发布。中断注入和残留部分临时文件测试证明旧 JSON 不被替换为半成品。
+
+共 23 项 XCTest 通过；新增的 swift-crypto 3.3.0 已锁定版本/commit 并保留 Apache/BoringSSL 许可。Apple 平台排除备份标记尚需 Mac 实测。严格边界：每个根目录由一个 store 独占；不声称防住恶意并发文件替换或断电损坏。真实音频元数据仍由 LCAudio 提供。详见 tickets/T1-3.md。
