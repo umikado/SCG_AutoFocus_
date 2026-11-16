@@ -1,0 +1,15 @@
+name: Pure Swift
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    container: swift:6.0.3-noble
+    steps:
+      - uses: actions/checkout@v4
+      - run: apt-get update && apt-get install -y python3
+      - run: swift --version
+      - run: python3 tools/ci/check_linux_package.py
+      - run: swift test --package-path Packages/LyricClipsKit
+# Xcode/iPhone acceptance is tracked separately; no Apple result is claimed here.
