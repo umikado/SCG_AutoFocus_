@@ -3,10 +3,12 @@ import PackageDescription
 
 let coreModules = ["LCCore", "LCText", "LCAlign", "LCTiming", "LCTemplates", "LCSubtitles", "LCModelStore"]
 var targets: [Target] = coreModules.map { name in
-    .target(name: name, dependencies: name == "LCCore" ? [] : [.target(name: "LCCore")])
+    .target(name: name, dependencies: name == "LCCore" ? [.product(name: "Crypto", package: "swift-crypto")] : [.target(name: "LCCore")])
 }
 var products = coreModules.map { Product.library(name: $0, targets: [$0]) }
-var dependencies: [Package.Dependency] = []
+var dependencies: [Package.Dependency] = [
+    .package(url: "https://github.com/apple/swift-crypto.git", exact: "3.3.0")
+]
 
 // Apple dependencies, including future binaryTarget declarations, belong inside this block.
 #if !os(Linux)
