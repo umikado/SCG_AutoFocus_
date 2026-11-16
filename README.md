@@ -18,6 +18,7 @@
 
 ## 当前实现与验证
 
+- [给 Gemini 的复核与开发交接报告](docs/GEMINI_HANDOFF.md)：分支状态、交付范围、测试证据、剩余契约问题与复核重点。
 - T1-1：七个纯 Swift targets、非 Linux Apple target 声明、Linux CI；Xcode 工程和 macOS 验收仍待完成。
 - T1-2：LCCore 校验模型及 schema v1 JSON 编解码，Linux Swift 6.0.3 下 13 项测试通过。
 - [v0.2 独立复核](docs/reviews/2026-11-17-v02/REVIEW.md)：保留轻量化方案；记录并发、量化边界等后续票需解决的问题。
