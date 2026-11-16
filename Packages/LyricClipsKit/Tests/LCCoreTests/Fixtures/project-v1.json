@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "00000000-0000-0000-0000-000000000001",
+  "createdAt": "2026-11-17T00:00:00Z",
+  "updatedAt": "2026-11-17T00:00:00Z",
+  "title": "Synthetic Fixture",
+  "artist": "Original test data",
+  "audio": {
+    "relativePath": "audio.wav",
+    "contentSHA256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "duration": 60,
+    "sampleRate": 44100,
+    "originalFilename": "audio.wav",
+    "hasEmbeddedArtwork": false
+  },
+  "language": "en",
+  "primaryASRLanguage": "en",
+  "rawLyrics": "First original line\n\nSecond original line",
+  "lines": [
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "index": 0,
+      "paragraphIndex": 0,
+      "text": "First original line",
+      "start": 1,
+      "end": 2,
+      "confidence": 1,
+      "source": "manual",
+      "words": [],
+      "isInSegment": true
+    }
+  ],
+  "segment": {
+    "range": {
+      "start": 0,
+      "end": 30
+    },
+    "padding": 1
+  },
+  "templateID": "minimal-center",
+  "templateOverrides": {
+    "showCredit": false
+  },
+  "exportSettings": {
+    "codec": "h264",
+    "fps": 30,
+    "includeEndCard": false,
+    "lrcRelativeToSegment": true
+  },
+  "processing": {
+    "separationEngineID": "passthrough",
+    "transcriptionEngineID": "whisper",
+    "whisperModelID": "base",
+    "usedCoreMLEncoder": false,
+    "usedDTWTimestamps": true,
+    "durationSeconds": 5,
+    "overallConfidence": 0.8
+  }
+}

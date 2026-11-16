@@ -1,0 +1,43 @@
+[49/50] Linking LyricClipsKitPackageTests.xctest
+Build complete! (19.59s)
+Test Suite 'All tests' started at 2026-11-17 03:05:48.621
+Test Suite 'debug.xctest' started at 2026-11-17 03:05:48.625
+Test Suite 'ModelTests' started at 2026-11-17 03:05:48.625
+Test Case 'ModelTests.testASRWordsValidateIntervalsAndProbability' started at 2026-11-17 03:05:48.625
+Test Case 'ModelTests.testASRWordsValidateIntervalsAndProbability' passed (0.002 seconds)
+Test Case 'ModelTests.testAudioSourceValidation' started at 2026-11-17 03:05:48.627
+Test Case 'ModelTests.testAudioSourceValidation' passed (0.103 seconds)
+Test Case 'ModelTests.testDecodingDoesNotBypassValidation' started at 2026-11-17 03:05:48.731
+Test Case 'ModelTests.testDecodingDoesNotBypassValidation' passed (0.004 seconds)
+Test Case 'ModelTests.testDefaultsAndSettingsValidation' started at 2026-11-17 03:05:48.735
+Test Case 'ModelTests.testDefaultsAndSettingsValidation' passed (0.002 seconds)
+Test Case 'ModelTests.testNestedNonfiniteValuesAreRejected' started at 2026-11-17 03:05:48.737
+Test Case 'ModelTests.testNestedNonfiniteValuesAreRejected' passed (0.024 seconds)
+Test Case 'ModelTests.testPartialTimingAndLocks' started at 2026-11-17 03:05:48.761
+Test Case 'ModelTests.testPartialTimingAndLocks' passed (0.001 seconds)
+Test Case 'ModelTests.testProjectChecksNestedBoundsAndIDs' started at 2026-11-17 03:05:48.762
+Test Case 'ModelTests.testProjectChecksNestedBoundsAndIDs' passed (0.012 seconds)
+Test Case 'ModelTests.testProjectGoldenRoundTrip' started at 2026-11-17 03:05:48.775
+Test Case 'ModelTests.testProjectGoldenRoundTrip' passed (0.006 seconds)
+Test Case 'ModelTests.testRejectsInvalidTimeRanges' started at 2026-11-17 03:05:48.780
+Test Case 'ModelTests.testRejectsInvalidTimeRanges' passed (0.001 seconds)
+Test Case 'ModelTests.testSegmentBoundariesAndPadding' started at 2026-11-17 03:05:48.781
+Test Case 'ModelTests.testSegmentBoundariesAndPadding' passed (0.001 seconds)
+Test Case 'ModelTests.testUTF16CharacterBoundaries' started at 2026-11-17 03:05:48.782
+Test Case 'ModelTests.testUTF16CharacterBoundaries' passed (0.001 seconds)
+Test Case 'ModelTests.testUnknownSchemaIsRejected' started at 2026-11-17 03:05:48.783
+Test Case 'ModelTests.testUnknownSchemaIsRejected' passed (0.003 seconds)
+Test Suite 'ModelTests' passed at 2026-11-17 03:05:48.787
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.161 (0.161) seconds
+Test Suite 'PackageTests' started at 2026-11-17 03:05:48.787
+Test Case 'PackageTests.testFoundationJSONAvailable' started at 2026-11-17 03:05:48.787
+Test Case 'PackageTests.testFoundationJSONAvailable' passed (0.001 seconds)
+Test Suite 'PackageTests' passed at 2026-11-17 03:05:48.788
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'debug.xctest' passed at 2026-11-17 03:05:48.788
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.162 (0.162) seconds
+Test Suite 'All tests' passed at 2026-11-17 03:05:48.788
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.162 (0.162) seconds
+◇ Test run started.
+↳ Testing Library Version: 6.0.3 (18c42c19cac3faf)
+✔ Test run with 0 tests passed after 0.005 seconds.
