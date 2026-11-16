@@ -45,9 +45,14 @@ public struct LyricLine: Codable, Hashable, Sendable, Identifiable {
         if let start, let end { _ = try TimeRange(start: start, end: end) }
         try probability(confidence, "confidence")
         if source == .manual || source == .tapSync { try require(confidence == 1, "locked.confidence") }
+        try require(zip(words, words.dropFirst()).allSatisfy {
+            $0.range.upperBound <= $1.range.lowerBound && $0.end <= $1.start
+        }, "words.order")
         let boundaries = characterOffsets(in: text)
         for word in words {
             try require(boundaries.contains(word.range.lowerBound) && boundaries.contains(word.range.upperBound), "word.range")
+            if let start { try require(word.start >= start, "word.start") }
+            if let end { try require(word.end <= end, "word.end") }
         }
         self.id = id
         self.index = index

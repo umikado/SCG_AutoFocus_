@@ -44,11 +44,10 @@ func relativePath(_ value: String) throws {
 }
 
 func characterOffsets(in text: String) -> Set<Int> {
-    var result: Set<Int> = [0]
-    var offset = 0
-    for character in text {
-        offset += String(character).utf16.count
-        result.insert(offset)
+    var result: Set<Int> = []
+    for index in text.indices {
+        result.insert(index.utf16Offset(in: text))
     }
+    result.insert(text.endIndex.utf16Offset(in: text))
     return result
 }

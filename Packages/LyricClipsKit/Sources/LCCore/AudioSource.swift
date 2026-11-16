@@ -6,7 +6,7 @@ public struct AudioSource: Codable, Hashable, Sendable {
     public let relativePath: String
     /// 64 hexadecimal digits identifying imported bytes.
     public let contentSHA256: String
-    /// Positive finite audio duration in seconds.
+    /// Finite audio duration of at least 15 seconds for an MVP project.
     public let duration: Double
     /// Positive finite source sample rate in Hz.
     public let sampleRate: Double
@@ -26,7 +26,7 @@ public struct AudioSource: Codable, Hashable, Sendable {
     ) throws {
         try LCCore.relativePath(relativePath)
         try require(contentSHA256.utf8.count == 64 && contentSHA256.utf8.allSatisfy { (48...57).contains($0) || (65...70).contains($0) || (97...102).contains($0) }, "contentSHA256")
-        try require(duration.isFinite && duration > 0, "audio.duration")
+        try require(duration.isFinite && duration >= 15, "audio.duration")
         try require(sampleRate.isFinite && sampleRate > 0, "sampleRate")
         self.relativePath = relativePath
         self.contentSHA256 = contentSHA256

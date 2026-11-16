@@ -128,6 +128,52 @@ final class ModelTests: XCTestCase {
         XCTAssertThrowsError(try ProcessingInfo(separationEngineID: "passthrough", transcriptionEngineID: "whisper", whisperModelID: "base", usedCoreMLEncoder: false, usedDTWTimestamps: true, durationSeconds: .infinity, overallConfidence: 0.5))
     }
 
+    func testWordsAreOrderedAndContained() throws {
+        let first = try WordTiming(text: "ab", range: 0..<2, start: 1, end: 2)
+        let adjacent = try WordTiming(text: "cd", range: 2..<4, start: 2, end: 3)
+        XCTAssertNoThrow(try LyricLine(index: 0, paragraphIndex: 0, text: "abcd", start: 1, end: 3, words: [first, adjacent]))
+        let rangeOverlap = try WordTiming(text: "bc", range: 1..<3, start: 2, end: 3)
+        let timeOverlap = try WordTiming(text: "cd", range: 2..<4, start: 1.9, end: 3)
+        for words in [[adjacent, first], [first, rangeOverlap], [first, timeOverlap]] {
+            XCTAssertThrowsError(try LyricLine(index: 0, paragraphIndex: 0, text: "abcd", words: words))
+        }
+        XCTAssertThrowsError(try LyricLine(index: 0, paragraphIndex: 0, text: "abcd", start: 1.1, words: [first]))
+        XCTAssertThrowsError(try LyricLine(index: 0, paragraphIndex: 0, text: "abcd", end: 1.9, words: [first]))
+        let valid = try LyricLine(index: 0, paragraphIndex: 0, text: "abcd", words: [first, adjacent])
+        var object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(valid)) as! [String: Any]
+        object["start"] = 1.1
+        XCTAssertThrowsError(try JSONDecoder().decode(LyricLine.self, from: JSONSerialization.data(withJSONObject: object)))
+    }
+
+    func testParagraphOrderAndShortAudioAreRejected() throws {
+        XCTAssertThrowsError(try ProjectMigrator.decode(mutated { object in
+            var lines = object["lines"] as! [[String: Any]]
+            lines[0]["paragraphIndex"] = 1
+            var second = lines[0]
+            second["id"] = UUID().uuidString
+            second["index"] = 1
+            second["paragraphIndex"] = 0
+            object["lines"] = lines + [second]
+        }))
+        for duration in [0.0, 14.999] {
+            XCTAssertThrowsError(try AudioSource(relativePath: "audio.wav", contentSHA256: String(repeating: "a", count: 64), duration: duration, sampleRate: 44100, originalFilename: "audio.wav")) { error in
+                XCTAssertEqual(error as? LCError, .invalidValue("audio.duration"))
+            }
+        }
+        XCTAssertNoThrow(try AudioSource(relativePath: "audio.wav", contentSHA256: String(repeating: "a", count: 64), duration: 15, sampleRate: 44100, originalFilename: "audio.wav"))
+    }
+
+    func testDecodedManualConfidenceAndAllCharacterBoundaries() throws {
+        XCTAssertThrowsError(try ProjectMigrator.decode(mutated { object in
+            var lines = object["lines"] as! [[String: Any]]
+            lines[0]["source"] = "manual"
+            lines[0]["confidence"] = 0.5
+            object["lines"] = lines
+        }))
+        XCTAssertEqual(characterOffsets(in: ""), [0])
+        XCTAssertEqual(characterOffsets(in: "A👩🏽‍💻e\u{301}日"), [0, 1, 8, 10, 11])
+    }
+
     private func fixture() throws -> Data {
         let url = try XCTUnwrap(Bundle.module.url(forResource: "project-v1", withExtension: "json", subdirectory: "Fixtures"))
         return try Data(contentsOf: url)

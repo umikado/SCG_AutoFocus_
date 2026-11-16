@@ -67,6 +67,9 @@ public struct Project: Codable, Hashable, Sendable, Identifiable {
         if let expected { try require(primaryASRLanguage == expected, "primaryASRLanguage") }
         try require(Set(lines.map(\.id)).count == lines.count, "line.id")
         try require(zip(lines, lines.dropFirst()).allSatisfy { $0.index < $1.index }, "line.index")
+        try require(zip(lines, lines.dropFirst()).allSatisfy {
+            $0.paragraphIndex <= $1.paragraphIndex
+        }, "line.paragraphIndex")
         for line in lines {
             if let start = line.start { try require(start <= audio.duration, "line.start") }
             if let end = line.end { try require(end <= audio.duration, "line.end") }

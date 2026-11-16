@@ -121,3 +121,9 @@ Mac 上可先运行第二条命令，但不能据此替代 `xcodebuild test` 或
 - 云端可在处理本轮反馈后继续 T1-3 ProjectStore、T1-4 LCSubtitles；实现 T1-4 前先解决上面的有界量化规则。
 - Mac Studio 可独立推进 Xcode 工程和 S0-0～S0-2 最小基线。iPhone 性能、内存、发热和真实歌声质量仍需 Phase 0 Gate。
 - 自有歌曲及人工 start/end、重复副歌序号标注保留在 Mac 本地；不提交公开母带。
+
+## 8. Gemini 最小修正回执（2026-11-17）
+
+已在 T1-2 分支补齐 words 范围/时间顺序、独立的行 start/end 约束、段落单调与 AudioSource ≥15 秒约束，以及 manual/confidence 的解码回归测试。新增测试先产生 8 项断言失败，修正后总计 16 项 XCTest 通过。UTF-16 边界遍历已去掉 String(character)，但 Set 仍会分配内存。
+
+后续契约认可并保留：SRT 在片段/下一 cue 边界内才允许扩为 1 ms；run 请求在 await 前认领序号、恢复后淘汰过期者；相同 DTW 时刻按词长分摊。补充：若 DTW 分摊窗口到 decodedEnd 已无正长度，必须返回无效/缺失证据，不能制造零长度 ASRWord。T2-6/T2-7 尚未实现。
